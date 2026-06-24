@@ -18,7 +18,7 @@ class UserRegisterView(CreateView):
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
-        return redirect('dashboard') # dashboardga o'tib ketadi
+        return redirect('dashboard') 
 
 class UserLoginView(LoginView):
     template_name = 'registration/login.html'
@@ -33,17 +33,14 @@ def dashboard_view(request):
     start_of_week = today - timedelta(days=today.weekday())
     start_of_month = today.replace(day=1)
 
-    # Statistika querylari
     today_total = Expense.objects.filter(user=user, date=today).aggregate(total=Sum('amount'))['total'] or 0
     week_total = Expense.objects.filter(user=user, date__gte=start_of_week).aggregate(total=Sum('amount'))['total'] or 0
     month_total = Expense.objects.filter(user=user, date__gte=start_of_month).aggregate(total=Sum('amount'))['total'] or 0
 
-    # Kategoriya bo'yicha guruhlash (Chart.js uchun)
     category_data = Expense.objects.filter(user=user).values('category__name').annotate(total=Sum('amount')).order_by('-total')
     
     most_expensive_category = category_data[0]['category__name'] if category_data else "Mavjud emas"
 
-    # Grafik uchun ma'lumotlarni tayyorlash
     chart_labels = [item['category__name'] for item in category_data]
     chart_values = [float(item['total']) for item in category_data]
 
@@ -57,7 +54,7 @@ def dashboard_view(request):
     }
     return render(request, 'expenses/dashboard.html', context)
 
-# === KATEGORIYA CRUD ===
+
 @login_required
 def category_list_create(request):
     if request.method == 'POST':
@@ -75,14 +72,12 @@ def category_delete(request, pk):
     category.delete()
     return redirect('category_list')
 
-# === XARAJATLAR CRUD ===
 @login_required
 def expense_list(request):
     user = request.user
     expenses = Expense.objects.filter(user=user).order_by('-date')
     categories = Category.objects.filter(user=user)
 
-    # Filtrlash logikasi
     filter_type = request.GET.get('filter_type')
     cat_filter = request.GET.get('category')
     today = timezone.now().date()
@@ -119,12 +114,10 @@ def expense_create(request):
 # === YANGI: XARAJATLARNI TAHRIRLASH FUNKSIYASI ===
 @login_required
 def expense_update(request, pk):
-    # Xavfsizlik uchun faqat shu userga tegishli xarajatni qidiramiz
     expense = get_object_or_404(Expense, pk=pk, user=request.user)
     
     if request.method == 'POST':
         category_id = request.POST.get('category')
-        # Kategoriyani ham shu userga tegishli ekanini tekshirib olamiz
         category = get_object_or_404(Category, id=category_id, user=request.user)
         
         expense.category = category
@@ -134,7 +127,7 @@ def expense_update(request, pk):
         if request.POST.get('date'):
             expense.date = request.POST.get('date')
             
-        expense.save() # O'zgarishlarni saqlaymiz
+        expense.save() 
         return redirect('expense_list')
         
     categories = Category.objects.filter(user=request.user)
