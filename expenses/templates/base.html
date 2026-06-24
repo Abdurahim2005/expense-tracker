@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            /* iPhone 16 Pro seriyasiga xos to'q va nozik pushti-binafsha aralash gradient */
+            background: linear-gradient(135deg, #120917 0%, #08080c 50%, #020203 100%);
+            min-height: 100vh;
+            color: #f3f4f6;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        /* Shishasimon (Glassmorphism) Premium Card */
+        .premium-card {
+            background: rgba(25, 18, 32, 0.45);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(236, 72, 153, 0.15); /* Nozik pushti nur */
+            border-radius: 24px;
+            color: #ffffff;
+        }
+        .form-control, .form-select {
+            background: rgba(255, 255, 255, 0.06) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: #ffffff !important;
+            border-radius: 12px;
+            padding: 12px;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #ec4899 !important;
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.25) !important;
+        }
+        .btn-premium {
+            background: linear-gradient(90deg, #d946ef 0%, #ec4899 100%);
+            border: none;
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-premium:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+        }
+        .navbar {
+            background: rgba(10, 6, 14, 0.8) !important;
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark mb-5 py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-4" href="#" style="background: linear-gradient(45deg, #ff9cd3, #ff76be); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">💸 Expense Tracker</a>
+            <div class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                    <a class="nav-item nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                    <a class="nav-item nav-link" href="{% url 'expense_list' %}">Xarajatlar</a>
+                    <a class="nav-item nav-link" href="{% url 'category_list' %}">Kategoriyalar</a>
+                    <span class="nav-link text-white-50 ms-3 me-3">| &nbsp; {{ user.username }}</span>
+                    <form action="{% url 'logout' %}" method="post" class="d-inline">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-outline-danger btn-sm px-3 rounded-pill">Chiqish</button>
+</form>
+                {% else %}
+                    <a class="nav-item nav-link me-2" href="{% url 'login' %}">Kirish</a>
+                    <a class="btn btn-premium btn-sm px-3 text-white" href="{% url 'register' %}">Ro'yxatdan o'tish</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

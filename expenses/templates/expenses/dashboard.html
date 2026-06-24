@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    /* Dashboard uchun maxsus premium karta uslubi */
+    .stat-link {
+        text-decoration: none !important; /* Havola chizig'ini yo'qotadi */
+        display: block;
+    }
+    .stat-card {
+        background: rgba(30, 21, 38, 0.4);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        padding: 24px 15px;
+        transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+    }
+    /* Endi har bir karta bosiluvchan ekanini bildirish uchun chiroyli hover effekti */
+    .stat-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(34, 211, 238, 0.4); /* Space Black uslubidagi ko'k nur */
+        box-shadow: 0 8px 24px rgba(34, 211, 238, 0.1);
+    }
+    .stat-title {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+    }
+    .stat-value {
+        font-weight: 700;
+        font-size: 1.6rem;
+        letter-spacing: -0.5px;
+    }
+    /* Ranglarning o'zaro chiroyli uyg'unligi (Ko'zga yoqimli ranglar) */
+    .text-purple { color: #c084fc; }
+    .text-gold { color: #fbbf24; }
+    .text-cyan { color: #22d3ee; }
+    .text-silver { color: #e5e7eb; } /* Eng ko'p xarajat sarlavhasi uchun pushtidan qutuldik */
+</style>
+
+<div class="row g-4 text-center mb-5">
+    <div class="col-md-3">
+        <a href="{% url 'expense_list' %}?filter_type=today" class="stat-link">
+            <div class="stat-card shadow">
+                <div class="stat-title">Bugun</div>
+                <div class="stat-value text-cyan">{{ today_total }} UZS</div>
+            </div>
+        </a>
+    </div>
+    
+    <div class="col-md-3">
+        <a href="{% url 'expense_list' %}?filter_type=week" class="stat-link">
+            <div class="stat-card shadow">
+                <div class="stat-title">Shu hafta</div>
+                <div class="stat-value text-purple">{{ week_total }} UZS</div>
+            </div>
+        </a>
+    </div>
+    
+    <div class="col-md-3">
+        <a href="{% url 'expense_list' %}?filter_type=month" class="stat-link">
+            <div class="stat-card shadow">
+                <div class="stat-title">Shu oy</div>
+                <div class="stat-value text-gold">{{ month_total }} UZS</div>
+            </div>
+        </a>
+    </div>
+    
+    <div class="col-md-3">
+        <a href="{% url 'expense_list' %}" class="stat-link">
+            <div class="stat-card shadow">
+                <div class="stat-title">Eng ko'p xarajat</div>
+                <div class="stat-value text-silver" style="font-size: 1.3rem; line-height: 2rem;">{{ most_expensive_category }}</div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="premium-card p-4 shadow-lg text-center" style="background: rgba(25, 18, 32, 0.35);">
+            <h4 class="fw-bold mb-4" style="color: #ffffff; letter-spacing: 0.5px;">Xarajatlar Diagrammasi</h4>
+            <div style="position: relative; margin: auto; height: 320px; width: 320px;">
+                <canvas id="expenseChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('expenseChart').getContext('2d');
+    
+    Chart.defaults.color = 'rgba(255, 255, 255, 0.7)';
+    Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto';
+
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: {{ chart_labels|safe }},
+            datasets: [{
+                data: {{ chart_values|safe }},
+                backgroundColor: [
+                    '#22d3ee', // Och ko'k
+                    '#c084fc', // Binafsha
+                    '#38bdf8', // Havorang
+                    '#fbbf24', // Oltinsimon
+                    '#a78bfa', // To'qroq binafsha
+                    '#64748b'  // Slate kulrang
+                ],
+                borderWidth: 2,
+                borderColor: '#120917'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        font: {
+                            size: 13
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

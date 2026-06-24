@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5 premium-card p-5 shadow-lg">
+        <h3 class="text-center fw-bold mb-4" style="color: #ffb1da;">Ro'yxatdan o'tish</h3>
+        
+        <form method="post" novalidate>
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label text-white-50 fw-medium small">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            
+            <button type="submit" class="btn btn-premium w-100 mt-3">Akkount yaratish</button>
+        </form>
+        
+        <p class="mt-4 text-center text-white-50 small">Akkountingiz bormi? <a href="{% url 'login' %}" style="color: #ec4899; text-decoration: none; font-weight: 600;">Tizimga kirish</a></p>
+    </div>
+</div>
+
+<script>
+    // Djangoning klasslari va xunuk help_text'larini o'chirib, Bootstrap klassini beramiz
+    document.querySelectorAll('input').forEach(input => {
+        input.classList.add('form-control');
+    });
+</script>
+{% endblock %}

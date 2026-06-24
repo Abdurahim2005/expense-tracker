@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    /* Premium Shishasimon Kartalar */
+    .custom-card {
+        background: rgba(20, 20, 25, 0.5);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 20px;
+        padding: 24px;
+    }
+    
+    .card-title {
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 1.25rem;
+        letter-spacing: -0.3px;
+    }
+
+    /* Ro'yxat elementlari (List group) */
+    .custom-list-item {
+        background: rgba(255, 255, 255, 0.03) !important;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        color: #e5e7eb !important;
+        border-radius: 12px !important;
+        margin-bottom: 8px;
+        padding: 14px 20px;
+        transition: background 0.2s ease;
+    }
+    .custom-list-item:hover {
+        background: rgba(255, 255, 255, 0.06) !important;
+    }
+
+    /* Tugmalar */
+    .btn-cyan {
+        background: #22d3ee;
+        color: #08080c;
+        font-weight: 600;
+        border-radius: 12px;
+        padding: 12px;
+        border: none;
+        transition: all 0.2s ease;
+    }
+    .btn-cyan:hover {
+        background: #06b6d4;
+        box-shadow: 0 0 15px rgba(34, 211, 238, 0.3);
+    }
+    .btn-delete-item {
+        color: #f87171;
+        border: 1px solid rgba(248, 113, 113, 0.2);
+        background: transparent;
+        border-radius: 8px;
+        padding: 6px 14px;
+        font-size: 0.85rem;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+    .btn-delete-item:hover {
+        background: rgba(248, 113, 113, 0.1);
+        color: #f87171;
+        border-color: #ef4444;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="custom-card shadow-lg">
+            <h4 class="card-title mb-4">Yangi kategoriya</h4>
+            <form method="post">
+                {% csrf_token %}
+                <input type="text" name="name" class="form-control mb-3" placeholder="Masalan: Transport" required>
+                <button type="submit" class="btn btn-cyan w-100">Qo'shish</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="custom-card shadow-lg">
+            <h4 class="card-title mb-4">Mening kategoriyalarim</h4>
+            <div class="list-group">
+                {% for cat in categories %}
+                    <div class="custom-list-item d-flex justify-content-between align-items-center">
+                        <span class="fw-medium">{{ cat.name }}</span>
+                        <a href="{% url 'category_delete' cat.pk %}" class="btn-delete-item">O'chirish</a>
+                    </div>
+                {% empty %}
+                    <div class="text-center py-4 text-white-50">
+                        <small>Kategoriyalar hali mavjud emas. Chap tomondan yangi kategoriya qo'shing.</small>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
