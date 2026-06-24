@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
 <style>
-    /* Dashboard uchun maxsus premium karta uslubi */
     .stat-link {
-        text-decoration: none !important; /* Havola chizig'ini yo'qotadi */
+        text-decoration: none !important;
         display: block;
     }
     .stat-card {
@@ -16,10 +15,9 @@
         transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         cursor: pointer;
     }
-    /* Endi har bir karta bosiluvchan ekanini bildirish uchun chiroyli hover effekti */
     .stat-card:hover {
         transform: translateY(-4px);
-        border-color: rgba(34, 211, 238, 0.4); /* Space Black uslubidagi ko'k nur */
+        border-color: rgba(34, 211, 238, 0.4); 
         box-shadow: 0 8px 24px rgba(34, 211, 238, 0.1);
     }
     .stat-title {
@@ -35,11 +33,10 @@
         font-size: 1.6rem;
         letter-spacing: -0.5px;
     }
-    /* Ranglarning o'zaro chiroyli uyg'unligi (Ko'zga yoqimli ranglar) */
     .text-purple { color: #c084fc; }
     .text-gold { color: #fbbf24; }
     .text-cyan { color: #22d3ee; }
-    .text-silver { color: #e5e7eb; } /* Eng ko'p xarajat sarlavhasi uchun pushtidan qutuldik */
+    .text-silver { color: #e5e7eb; } 
 </style>
 
 <div class="row g-4 text-center mb-5">
@@ -105,12 +102,12 @@
             datasets: [{
                 data: {{ chart_values|safe }},
                 backgroundColor: [
-                    '#22d3ee', // Och ko'k
-                    '#c084fc', // Binafsha
-                    '#38bdf8', // Havorang
-                    '#fbbf24', // Oltinsimon
-                    '#a78bfa', // To'qroq binafsha
-                    '#64748b'  // Slate kulrang
+                    '#22d3ee', 
+                    '#c084fc', 
+                    '#38bdf8', 
+                    '#fbbf24', 
+                    '#a78bfa',
+                    '#64748b'
                 ],
                 borderWidth: 2,
                 borderColor: '#120917'
