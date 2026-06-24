@@ -1,5 +1,2 @@
-# Serverda loyihani yurgizish uchun uksual gunicorn kutubxonasi
-pip install gunicorn
-
-# Loyihadagi CSS, rasm va static fayllarni serverda chiroyli ochilishi uchun
-pip install whitenoise
+ gunicorn
+ whitenoise
